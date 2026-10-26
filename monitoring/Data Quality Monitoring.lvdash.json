@@ -1,0 +1,349 @@
+{
+  "datasets": [
+    {
+      "name": "fc7dbc33",
+      "displayName": "expectations",
+      "queryLines": [
+        "select * from dq_expectations_history"
+      ],
+      "catalog": "dev",
+      "schema": "stepright"
+    },
+    {
+      "name": "81aefe50",
+      "displayName": "quanrantine",
+      "queryLines": [
+        "SELECT * From dq_quarantine_counts"
+      ],
+      "catalog": "dev",
+      "schema": "stepright"
+    },
+    {
+      "name": "1d020af6",
+      "displayName": "Orphans",
+      "queryLines": [
+        "SELECT * from dq_referential_integrity"
+      ],
+      "catalog": "dev",
+      "schema": "stepright"
+    }
+  ],
+  "relationshipGraphs": [
+    {
+      "sources": [
+        {
+          "name": "expectations",
+          "datasetName": "fc7dbc33"
+        },
+        {
+          "name": "quanrantine",
+          "datasetName": "81aefe50"
+        },
+        {
+          "name": "Orphans",
+          "datasetName": "1d020af6"
+        }
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "317d6a63",
+      "displayName": "expectations",
+      "layout": [
+        {
+          "widget": {
+            "name": "90eedc33",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "fields": [
+                    {
+                      "name": "expectations__table_name",
+                      "expression": "`expectations`.`table_name`"
+                    },
+                    {
+                      "name": "daily(expectations__timestamp)",
+                      "expression": "DATE_TRUNC(\"DAY\", `expectations`.`timestamp`)"
+                    },
+                    {
+                      "name": "expectations__failure_rate_pct",
+                      "expression": "`expectations`.`failure_rate_pct`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": false
+              },
+              "version": 3,
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "daily(expectations__timestamp)",
+                  "axis": {
+                    "title": "Daily"
+                  },
+                  "scale": {
+                    "type": "temporal"
+                  }
+                },
+                "y": {
+                  "fieldName": "expectations__failure_rate_pct",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "expectations__table_name",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "44d56896",
+      "displayName": "Global Filters",
+      "layout": [
+        {
+          "widget": {
+            "name": "1182e1e8",
+            "queries": [
+              {
+                "name": "dashboards/01f1d00096391f5992bc290de0fb85a5/datasets/01f1d000b6da1d6b948e2310b4eb4c11_failed_records",
+                "query": {
+                  "datasetName": "fc7dbc33",
+                  "fields": [
+                    {
+                      "name": "failed_records",
+                      "expression": "`failed_records`"
+                    },
+                    {
+                      "name": "failed_records_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "showDescription": true
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "failed_records",
+                    "queryName": "dashboards/01f1d00096391f5992bc290de0fb85a5/datasets/01f1d000b6da1d6b948e2310b4eb4c11_failed_records"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 1,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "4e056220",
+            "spec": {
+              "encodings": {
+                "fields": []
+              },
+              "version": 2,
+              "widgetType": "filter-single-select",
+              "frame": {
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 1,
+            "height": 2
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_GLOBAL_FILTERS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "6bc28c3d",
+      "displayName": "quanrantine",
+      "layout": [
+        {
+          "widget": {
+            "name": "59949d1d",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "data": {
+                "queryName": "main_query"
+              },
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {}
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 6,
+            "width": 8,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "66eb0fe7",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "fields": [
+                    {
+                      "name": "quanrantine__source",
+                      "expression": "`quanrantine`.`source`"
+                    },
+                    {
+                      "name": "count(quanrantine__*)",
+                      "expression": "COUNT(STRUCT(`quanrantine`.`*`))"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "quanrantine__source",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "count(quanrantine__*)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 10,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "48678243",
+      "displayName": "orphans",
+      "layout": [
+        {
+          "widget": {
+            "name": "cb2c6ab3",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "fields": [
+                    {
+                      "name": "Orphans__relationship",
+                      "expression": "`Orphans`.`relationship`"
+                    },
+                    {
+                      "name": "count(Orphans__*)",
+                      "expression": "COUNT(STRUCT(`Orphans`.`*`))"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "Orphans__relationship",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "count(Orphans__*)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 10,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}

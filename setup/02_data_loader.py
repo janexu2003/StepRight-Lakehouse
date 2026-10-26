@@ -79,6 +79,10 @@ for folder in subfolders:
 
 # COMMAND ----------
 
+
+
+# COMMAND ----------
+
 # MAGIC %md
 # MAGIC #### Verify row counts per source
 # MAGIC This is also our environment health check — if Unity Catalog and the landing volume

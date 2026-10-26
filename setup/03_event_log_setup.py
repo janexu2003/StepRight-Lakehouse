@@ -18,8 +18,8 @@
 # COMMAND ----------
 
 dbutils.widgets.text("catalog", "dev", "Target catalog")
-dbutils.widgets.text("ingestion_pipeline_id", "9a249523-182d-4eed-9839-6cfaf0f6e1bf", "stepright-ingestion-pipeline ID")
-dbutils.widgets.text("transformation_pipeline_id", "5a15b0b7-b094-4fca-86c7-404a2119a053", "stepright-transformation-pipeline ID")
+dbutils.widgets.text("ingestion_pipeline_id", "e987bc81-68f8-4eb3-879d-2f1e56172fe3", "stepright-ingestion-pipeline ID")
+dbutils.widgets.text("transformation_pipeline_id", "35cd92bd-8f22-455f-af36-5f850bce19e2", "stepright-transformation-pipeline ID")
 
 catalog = dbutils.widgets.get("catalog")
 ingestion_pipeline_id = dbutils.widgets.get("ingestion_pipeline_id")
@@ -33,6 +33,7 @@ if not ingestion_pipeline_id or not transformation_pipeline_id:
 
 # COMMAND ----------
 
+#create a view on event log
 spark.sql(f"""
 CREATE OR REPLACE VIEW {catalog}.stepright.ingestion_event_log_raw AS
 SELECT * FROM event_log("{ingestion_pipeline_id}")
@@ -45,3 +46,13 @@ SELECT * FROM event_log("{transformation_pipeline_id}")
 
 print(f"Created {catalog}.stepright.ingestion_event_log_raw")
 print(f"Created {catalog}.stepright.transformation_event_log_raw")
+
+# COMMAND ----------
+
+#we are interested in flow_progress event_type
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC select * from dev.stepright.ingestion_event_log_raw 
+# MAGIC where event_type = "flow_progress"
