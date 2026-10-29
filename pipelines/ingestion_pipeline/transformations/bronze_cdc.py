@@ -6,8 +6,7 @@ as it arrived. No flattening here — that's Silver's job.
 Bronze exists to give us a durable, replayable record of exactly what arrived, so
 any downstream rebuild never has to re-touch the source systems.
 
-Schemas are declared explicitly, not inferred by Auto Loader. These are our own
-internal, contract-bound CDC sources — the schema is already fully known and
+Schemas are declared explicitly, not inferred by Auto Loader. These are our own internal, contract-bound CDC sources — the schema is already fully known and
 locked. Schema inference is for genuinely
 unknown or externally-evolving data, not this.
 """

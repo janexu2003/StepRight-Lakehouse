@@ -12,8 +12,7 @@ exactly what arrived, untouched. This file reads from those existing bronze
 tables and adds quality tagging as a separate step, so ingestion code never has
 to know quality rules exist, and quality rules can evolve independently.
 
-Why expect_all, not expect_all_or_drop or expect_all_or_fail: a hard fail halts
-the whole pipeline over one bad row. A silent drop loses that row without anyone
+Why expect_all, not expect_all_or_drop or expect_all_or_fail: a hard fail halts the whole pipeline over one bad row. A silent drop loses that row without anyone
 noticing — the same mistake as the referential-integrity lesson from L1.
 expect_all keeps every row and simply tags it — nothing lost, nothing blocked.
 

@@ -1,0 +1,105 @@
+name: CI
+
+
+on:
+  push:
+    branch: [main]
+  workflow_dispatch:
+
+
+jobs:
+  unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      
+      - name: Install test Independancies
+        run: pip install pytest "pyspark>=3.5"
+      
+      - name: Run ingestion_pipeline unit test
+        run: pytest pipelines/ingestion_pipeline/tests -v
+
+      - name: Run transformation_pipeline unit test
+        run: pytest pipelines/transformation_pipelin/tests -v
+  
+  validate-and-deploy-uat:
+    needs: unit-test
+    runs-on: ubuntu-latest
+    env:
+      DATABRICKS_HOST: ${{secrets.DATABRICKS_HOST_UAT}}
+      DATABRICKS_TOKEN: ${{secrets.DATABRICKS_TOKEN_UAT}}
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      
+      - uses: databricks/setup-cli@main
+
+      - name: Install SDK for catalog-ensure step
+        run: pip install databricks-sdk==0.67.0
+      
+      # WorkspaceClient() would automatically pull token 
+      - name: Ensure target catalog exists
+        run: 
+          python3 -c "
+          from databricks.sdk import WorkspaceClient
+          w = WorkspaceClient()
+          try:
+            w.catalog.create(name='uat')
+            print('create catalog: uat')
+          except Exception as e:
+            if 'already exists' in str(e).lower():
+              print('Catalog uat already exists - continuing')
+            else:
+              raise
+          "
+      - name: Validate bundle
+        working-directory: bundle
+        run: databricks bundle validate --target uat
+      
+      - name: Deploy bundle
+        working-directory: bundle
+        run: databricks bundle deploy --target uat
+      
+      - name: Run environment bootstrap
+        working-directory: bundle
+        run: databricks bundle run stepright_environment_bootstrap --target uat
+
+  integration-test:
+    needs: validate-and-deploy-uat
+    runs-on: ubuntu-latest
+    env:
+      DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_UAT }}
+      DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_UAT }}
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      
+      - uses: databricks/setup-cli@main
+
+      - name: Install test dependencies
+        run: pip install pytest faker databricks-sdk==0.67.0
+      
+      - name: Run ingestion_pipeline unit test
+        working_directory: tests/integration
+        run: pytest test_integration.py -v -5
+      
+
+    
+
+
+
+
+
+
