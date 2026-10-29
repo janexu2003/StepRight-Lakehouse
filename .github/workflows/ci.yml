@@ -24,7 +24,7 @@ jobs:
         run: pytest pipelines/ingestion_pipeline/tests -v
 
       - name: Run transformation_pipeline unit test
-        run: pytest pipelines/transformation_pipelin/tests -v
+        run: pytest pipelines/transformation_pipeline/tests -v
   
   validate-and-deploy-uat:
     needs: unit-test
