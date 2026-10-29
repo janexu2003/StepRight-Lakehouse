@@ -93,7 +93,7 @@ jobs:
         run: pip install pytest faker databricks-sdk==0.67.0
       
       - name: Run ingestion_pipeline unit test
-        working_directory: tests/integration
+        working-directory: tests/integration
         run: pytest test_integration.py -v -5
       
 
