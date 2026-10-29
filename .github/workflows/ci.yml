@@ -47,19 +47,20 @@ jobs:
       
       # WorkspaceClient() would automatically pull token 
       - name: Ensure target catalog exists
-        run: 
-          python3 -c "
+        run: |
+          python3 - <<'EOF'
           from databricks.sdk import WorkspaceClient
           w = WorkspaceClient()
           try:
-            w.catalog.create(name='uat')
-            print('create catalog: uat')
+              w.catalogs.create(name='uat')
+              print('Created catalog: uat')
           except Exception as e:
-            if 'already exists' in str(e).lower():
-              print('Catalog uat already exists - continuing')
-            else:
-              raise
-          "
+              if 'already exists' in str(e).lower():
+                  print('Catalog uat already exists - continuing')
+              else:
+                  raise
+          EOF
+      
       - name: Validate bundle
         working-directory: bundle
         run: databricks bundle validate --target uat
