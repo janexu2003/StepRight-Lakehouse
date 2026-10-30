@@ -49,7 +49,7 @@ jobs:
       
       # WorkspaceClient() would automatically pull token 
       # try:
-      #         w.catalogs.create(name='uat')
+      #         w.catalogs.create(name='uat-ws')
       #         print('Created catalog: uat')
       #     except Exception as e:
       #         if 'already exists' in str(e).lower():

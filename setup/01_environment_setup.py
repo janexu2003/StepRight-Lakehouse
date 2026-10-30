@@ -35,7 +35,22 @@ catalog
 
 # COMMAND ----------
 
-spark.sql(f"CREATE CATALOG IF NOT EXISTS {catalog}")
+#spark.sql(f"CREATE CATALOG IF NOT EXISTS {catalog}")
+
+# --- already in your notebook (keep as is) ---
+dbutils.widgets.text("catalog", "dev")
+catalog = dbutils.widgets.get("catalog")
+
+# --- new: replaces the CREATE CATALOG line ---
+print(f"Bootstrap catalog = {catalog!r}")
+
+existing = [r.catalog for r in spark.sql("SHOW CATALOGS").collect()]
+if catalog not in existing:
+    raise ValueError(
+        f"Catalog '{catalog}' not found. Create it in Catalog Explorer "
+        f"(uses Default Storage) and re-run. Existing catalogs: {existing}"
+    )
+# --- rest of your notebook continues (CREATE SCHEMA ..., etc.) ---
 
 # COMMAND ----------
 
