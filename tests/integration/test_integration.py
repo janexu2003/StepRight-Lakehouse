@@ -114,6 +114,11 @@ def test_orchestration_job_end_to_end(
     # --- Setup ---
     # reset_uat (fixture) has already cleared landing's contents.
     batch_dir = _generate_fixed_seed_batch(str(tmp_path / "it_batch"))
+    # --- debug: paste these 4 lines here ---
+    print(f"\nGenerator returned: {batch_dir}")
+    for root, dirs, files in os.walk(tmp_path):
+        print(root, "| dirs:", dirs, "| files:", files[:5])
+    # --- end debug --
     _upload_batch_to_landing(workspace_client, batch_dir, catalog="uat")
  
     # --- Trigger ---
