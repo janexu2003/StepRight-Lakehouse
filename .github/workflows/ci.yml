@@ -107,7 +107,7 @@ jobs:
       
       - name: Run ingestion_pipeline unit test
         working-directory: tests/integration
-        run: pytest test_integration.py -v -5
+        run: pytest test_integration.py -v -s
       
 
     
