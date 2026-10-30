@@ -32,6 +32,8 @@ jobs:
     env:
       DATABRICKS_HOST: ${{secrets.DATABRICKS_HOST_UAT}}
       DATABRICKS_TOKEN: ${{secrets.DATABRICKS_TOKEN_UAT}}
+      DATABRICKS_WAREHOUSE_ID_UAT: ${{secrets.DATABRICKS_WAREHOUSE_ID_UAT}}
+
     
     steps:
       - uses: actions/checkout@v4
@@ -46,20 +48,31 @@ jobs:
         run: pip install databricks-sdk==0.67.0
       
       # WorkspaceClient() would automatically pull token 
+      # try:
+      #         w.catalogs.create(name='uat')
+      #         print('Created catalog: uat')
+      #     except Exception as e:
+      #         if 'already exists' in str(e).lower():
+      #             print('Catalog uat already exists - continuing')
+      #         else:
+      #             raise
+      #     EOF
       - name: Ensure target catalog exists
         run: |
-          python3 - <<'EOF'
+          python3 - c "
+          import os
           from databricks.sdk import WorkspaceClient
           w = WorkspaceClient()
-          try:
-              w.catalogs.create(name='uat')
-              print('Created catalog: uat')
-          except Exception as e:
-              if 'already exists' in str(e).lower():
-                  print('Catalog uat already exists - continuing')
-              else:
-                  raise
-          EOF
+          resp = w.statement_execution.execute_statement(
+              warehouse_id = os.envrion['DATABRICKS_WAREHOUSE_ID_UAT'],
+              statement = 'CREATE CATALOG IF NOT EXISTS uat',
+              wait_time = '30s'
+          )
+          if resp.status.state.value != 'SUCCEEDED':
+            raise SystemExit(f'CREATED CATALOG failed:{resp.status.error}')
+          print('Catalog uat ensured (created if missing, no-op is already present)')
+          ""
+          
       
       - name: Validate bundle
         working-directory: bundle
