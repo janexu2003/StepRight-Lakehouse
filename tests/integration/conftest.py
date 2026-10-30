@@ -19,6 +19,7 @@ from dataclasses import dataclass
  
 import pytest
 from databricks.sdk import WorkspaceClient
+import os
  
 # Path from tests/integration/ to bundle/ — same ../../ depth convention
 # used throughout this project's resource YAML.
