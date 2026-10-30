@@ -23,9 +23,9 @@ from databricks.sdk import WorkspaceClient
 # Path from tests/integration/ to bundle/ — same ../../ depth convention
 # used throughout this project's resource YAML.
 BUNDLE_DIR = "../../bundle"
-TARGET = "uat-ws"
- 
- 
+TARGET = "uat-ws"                                      # bundle target name
+CATALOG = os.environ.get("STEPRIGHT_CATALOG", "uat")   # Unity Catalog name
+
 @dataclass
 class UatResourceIds:
     ingestion_pipeline_id: str
@@ -143,7 +143,8 @@ def reset_uat(workspace_client: WorkspaceClient):
     one-time-per-environment (stepright_environment_bootstrap's job),
     not per-test-run.
     """
-    catalog = TARGET  # "uat" — catalog and target name happen to match here
+    catalog = CATALOG  
+    # "uat" — catalog and target name happen to match here
  
     # Clear the landing volume's contents (not the folders themselves —
     # 01_environment_setup.py already created those, and pipelines expect
