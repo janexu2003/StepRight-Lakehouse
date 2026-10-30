@@ -71,7 +71,7 @@ jobs:
           if resp.status.state.value != 'SUCCEEDED':
             raise SystemExit(f'CREATED CATALOG failed:{resp.status.error}')
           print('Catalog uat ensured (created if missing, no-op is already present)')
-          ""
+          "
           
       
       - name: Validate bundle
