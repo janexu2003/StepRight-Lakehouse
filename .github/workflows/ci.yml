@@ -76,15 +76,15 @@ jobs:
       
       - name: Validate bundle
         working-directory: bundle
-        run: databricks bundle validate --target uat
+        run: databricks bundle validate --target uat-ws
       
       - name: Deploy bundle
         working-directory: bundle
-        run: databricks bundle deploy --target uat
+        run: databricks bundle deploy --target uat-ws
       
       - name: Run environment bootstrap
         working-directory: bundle
-        run: databricks bundle run stepright_environment_bootstrap --target uat
+        run: databricks bundle run stepright_environment_bootstrap --target uat-ws
 
   integration-test:
     needs: validate-and-deploy-uat
