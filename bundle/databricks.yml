@@ -32,7 +32,7 @@ targets:
       workspace: 
         host: https://dbc-9d01ef09-0cd3.cloud.databricks.com/
 
-    uat-ws:
+    uat-ws: 
       workspace:
         host: https://dbc-9d01ef09-0cd3.cloud.databricks.com/
       variables:
@@ -40,7 +40,7 @@ targets:
 
     prod-ws:
       workspace:
-        host: https://dbc-f4aa3bf8-4b54.cloud.databricks.com/
+        host: https://dbc-fe5906c3-5e42.cloud.databricks.com/
       variables:
         stepright_catalog: prod
-        stepright_warehouse_id: 87661d7fa3770e14
+        stepright_warehouse_id: c22f075c40202ba2

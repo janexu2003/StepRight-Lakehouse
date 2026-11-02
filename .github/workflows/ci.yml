@@ -1,9 +1,9 @@
 name: CI
 
-
+#everytime push to main, workflow_dispactch runs
 on:
-  push:
-    branch: [main]
+  #push:
+    #branch: [main]
   workflow_dispatch:
 
 

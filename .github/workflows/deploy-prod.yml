@@ -1,0 +1,50 @@
+name: Deploy Prod
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type "DEPLOY PROD"(exact,xase-sensitive) to proceed'
+        required: true
+
+jobs:
+  deploy-prod:
+    runs-on: ubundu-latest
+    env:
+      DATABRICKS_HOST: ${{secrets.DATABRICKS_HOST_UAT}}
+      DATABRICKS_TOKEN: ${{secrets.DATABRICKS_TOKEN_UAT}}
+    steps:
+      - name: Verify confirmation phrase
+        run: |
+          if ["${{ github.event.inputs.confirm }}" != "DEPLOY PROD"]; then 
+            echo "confirmation phrase did not match exactly. Aborting - nothing was deployed."
+            exit 1
+          fi
+          echo "Comfirmed.Proceeding with prod deployment." 
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      
+      - uses: databricks/setup-cli@main
+
+      - name: Install smoke test dependencies
+        run: pip install databricks-sdk==0.67.0
+         
+      
+      - name: Validate bundle
+        working-directory: bundle
+        run: databricks bundle validate --target prod-ws
+      
+      - name: Deploy bundle
+        working-directory: bundle
+        run: databricks bundle deploy --target prod-ws
+      
+      - name: Run environment bootstrap
+        working-directory: bundle
+        run: databricks bundle run stepright_environment_bootstrap --target prod-ws
+
+      - name: Run smoke test
+        working-directory: tests/smoke
+        run: pytest test_smoke.py -v -s
