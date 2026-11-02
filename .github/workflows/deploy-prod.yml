@@ -11,8 +11,8 @@ jobs:
   deploy-prod:
     runs-on: ubundu-latest
     env:
-      DATABRICKS_HOST: ${{secrets.DATABRICKS_HOST_UAT}}
-      DATABRICKS_TOKEN: ${{secrets.DATABRICKS_TOKEN_UAT}}
+      DATABRICKS_HOST: ${{secrets.DATABRICKS_HOST_PROD}}
+      DATABRICKS_TOKEN: ${{secrets.DATABRICKS_TOKEN_PROD}}
     steps:
       - name: Verify confirmation phrase
         run: |
@@ -29,7 +29,7 @@ jobs:
       
       - uses: databricks/setup-cli@main
 
-      - name: Install smoke test dependencies
+      - name: Install smoke test dependencies1
         run: pip install databricks-sdk==0.67.0
          
       
