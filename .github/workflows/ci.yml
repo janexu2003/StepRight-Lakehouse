@@ -59,12 +59,12 @@ jobs:
       #     EOF
       - name: Ensure target catalog exists
         run: |
-          python3 - c "
+          python3 -c "
           import os
           from databricks.sdk import WorkspaceClient
           w = WorkspaceClient()
           resp = w.statement_execution.execute_statement(
-              warehouse_id = os.envrion['DATABRICKS_WAREHOUSE_ID_UAT'],
+              warehouse_id = os.environ['DATABRICKS_WAREHOUSE_ID_UAT'],
               statement = 'CREATE CATALOG IF NOT EXISTS uat',
               wait_time = '30s'
           )

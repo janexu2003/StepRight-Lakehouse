@@ -9,7 +9,7 @@ on:
 
 jobs:
   deploy-prod:
-    runs-on: ubundu-latest
+    runs-on: ubuntu-latest
     env:
       DATABRICKS_HOST: ${{secrets.DATABRICKS_HOST_PROD}}
       DATABRICKS_TOKEN: ${{secrets.DATABRICKS_TOKEN_PROD}}
